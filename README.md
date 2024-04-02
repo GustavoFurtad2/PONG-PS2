@@ -1,3 +1,3 @@
-# TYRA-PS2-GAMES
+# HOMEBREW-PS2-GAMES
 
-Homebrew Playstation 2 games made in Tyra Engine.
+Homebrew Playstation 2 games
