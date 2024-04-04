@@ -26,6 +26,8 @@ class Pong: public Game {
  private:
   void loadTexture();
   void loadSprite();
+  void Controls();
+  void resetBall();
 
   Engine* engine;
 
