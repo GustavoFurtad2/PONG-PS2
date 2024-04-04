@@ -1,4 +1,3 @@
-
 /*
 # _____        ____   ___
 #   |     \/   ____| |___|
@@ -14,16 +13,15 @@
 
 namespace Tyra {
 
-    /** Lets save pointer to engine class */
-    Pong::Pong(Engine* t_engine) : engine(t_engine) {}
+  Pong::Pong(Engine* t_engine) : engine(t_engine) {}
 
-    Pong::~Pong() {
-        engine->renderer.getTextureRepository().freeBySprite(rect1);
-        engine->renderer.getTextureRepository().freeBySprite(rect2);
-        engine->renderer.getTextureRepository().freeBySprite(ball);
-    }
+  Pong::~Pong() {
+      engine->renderer.getTextureRepository().freeBySprite(rect1);
+      engine->renderer.getTextureRepository().freeBySprite(rect2);
+      engine->renderer.getTextureRepository().freeBySprite(ball);
+  }
 
-    void Pong::init() {
+  void Pong::init() {
 
       loadSprite();
       loadTexture();
@@ -33,13 +31,9 @@ namespace Tyra {
 
       BallX = 512.0F / 2.0 - BallWidth / 2.0F;
       BallY = 224.0F / 2.0 - BallHeight / 2.0F;
+  }
 
-    }
-
-    void Pong::loop() {
-      auto& renderer = engine->renderer;
-
-      renderer.beginFrame();
+  void Pong::Controls() {
 
       if (engine->pad.getPressed().Cross) {
           HoldingCross = true;
@@ -66,25 +60,25 @@ namespace Tyra {
       }
 
       if (HoldingUp == true) {
-        if (Player1Y >= 0.0F) {
-          Player1Y -= Player1_Speed;
-        }
+          if (Player1Y >= 0.0F) {
+              Player1Y -= Player1_Speed;
+          }
       }
       if (HoldingDown == true) {
-        if (Player1Y + PlayerHeight <= 448.0F) {
-          Player1Y += Player1_Speed;
-        }
+          if (Player1Y + PlayerHeight <= 448.0F) {
+              Player1Y += Player1_Speed;
+          }
       }
 
       if (HoldingTriangle == true) {
-        if (Player2Y >= 0.0F) {
-          Player2Y -= Player2_Speed;
-        }
+          if (Player2Y >= 0.0F) {
+              Player2Y -= Player2_Speed;
+          }
       }
       if (HoldingCross == true) {
-        if (Player2Y + PlayerHeight <= 448.0F) {
-          Player2Y += Player2_Speed;
-        }
+          if (Player2Y + PlayerHeight <= 448.0F) {
+              Player2Y += Player2_Speed;
+          }
       }
 
       BallX += BallSpeedX;
@@ -92,56 +86,53 @@ namespace Tyra {
 
       if (BallX + BallWidth >= 448.0F + 48.0F && BallX <= 512.0F && BallY >= Player2Y && BallY <= Player2Y + PlayerHeight) {
 
-        BallSpeed += 0.1F;
-        BallSpeedX = -BallSpeed;
-        BallSpeedY = -BallSpeed;
-        Player1_Speed = BallSpeed;
-        Player2_Speed = BallSpeed;
+          BallSpeed += 0.1F;
+          BallSpeedX = -BallSpeed;
+          BallSpeedY = -BallSpeed;
+          Player1_Speed = BallSpeed;
+          Player2_Speed = BallSpeed;
 
-      }
-      else if (BallX >= 0 && BallX <= PlayerWidth && BallY >= Player1Y && BallY <= Player1Y + PlayerHeight) {
+      } else if (BallX >= 0 && BallX <= PlayerWidth && BallY >= Player1Y && BallY <= Player1Y + PlayerHeight) {
 
-        BallSpeed += 0.1F;
-        BallSpeedX = BallSpeed;
-        BallSpeedY = BallSpeed;
-        Player1_Speed = BallSpeed;
-        Player2_Speed = BallSpeed;
+          BallSpeed += 0.1F;
+          BallSpeedX = BallSpeed;
+          BallSpeedY = BallSpeed;
+          Player1_Speed = BallSpeed;
+          Player2_Speed = BallSpeed;
 
-      }
-      else if (BallX < 0) {
-        BallX = 512.0F / 2.0 - BallWidth / 2.0F;
-        BallY = 224.0F / 2.0 - BallHeight / 2.0F;
-      }
-      else if (BallX > 512.0F) {
-        BallX = 512.0F / 2.0 - BallWidth / 2.0F;
-        BallY = 224.0F / 2.0 - BallHeight / 2.0F;
+      } else if (BallX < 0 || BallX > 512.0F) {
+          this->resetBall();
       }
 
-      if (BallY + BallHeight / 2 >= 448.0F) {
-        BallSpeedY = -BallSpeedY;
+      if (BallY + BallHeight / 2 >= 448.0F || BallY <= 0.0F) {
+          BallSpeedY = -BallSpeedY;
       }
-      else if (BallY <= 0.0F) {
-        BallSpeedY = -BallSpeedY;
-      }
+  }
 
+  void Pong::loop() {
+      auto& renderer = engine->renderer;
+
+      renderer.beginFrame();
+
+      this->Controls();
       rect1.position = Vec2(0.0F, Player1Y);
       rect2.position = Vec2(512.0F, Player2Y);
-      ball.position  = Vec2(BallX, BallY);
+      ball.position = Vec2(BallX, BallY);
 
       renderer.renderer2D.render(rect1);
       renderer.renderer2D.render(rect2);
       renderer.renderer2D.render(ball);
 
       renderer.endFrame();
-    }
+  }
 
-    void Pong::loadSprite() {
+  void Pong::loadSprite() {
 
       const auto& screenSettings = engine->renderer.core.getSettings();
 
       rect1.mode = SpriteMode::MODE_STRETCH;
       rect2.mode = SpriteMode::MODE_STRETCH;
-      ball.mode  = SpriteMode::MODE_STRETCH;
+      ball.mode = SpriteMode::MODE_STRETCH;
 
       rect1.size = Vec2(PlayerWidth, PlayerHeight);
       rect1.position = Vec2(-PlayerWidth, Player1Y);
@@ -151,9 +142,9 @@ namespace Tyra {
 
       ball.size = Vec2(BallWidth, BallHeight);
       ball.position = Vec2(512.0F / 2.0F - BallWidth / 2.0F, 448 / 2.0F - BallWidth / 2.0F);
-   }
+  }
 
-   void Pong::loadTexture() {
+  void Pong::loadTexture() {
 
       auto& renderer = engine->renderer;
 
@@ -171,6 +162,11 @@ namespace Tyra {
       rect1_texture->addLink(rect1.id);
       rect2_texture->addLink(rect2.id);
       ball_texture->addLink(ball.id);
-    }
+  }
+
+  void Pong::resetBall() {
+      BallX = 512.0F / 2.0 - BallWidth / 2.0F;
+      BallY = 224.0F / 2.0 - BallHeight / 2.0F;
+  }
 
 }
