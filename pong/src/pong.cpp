@@ -86,7 +86,9 @@ namespace Tyra {
 
       if (BallX + BallWidth >= 448.0F + 48.0F && BallX <= 512.0F && BallY >= Player2Y && BallY <= Player2Y + PlayerHeight) {
 
-          BallSpeed += 0.1F;
+          if (BallSpeed < 10) {
+             BallSpeed += 0.1f;
+          }
           BallSpeedX = -BallSpeed;
           BallSpeedY = -BallSpeed;
           Player1_Speed = BallSpeed;
@@ -94,7 +96,9 @@ namespace Tyra {
 
       } else if (BallX >= 0 && BallX <= PlayerWidth && BallY >= Player1Y && BallY <= Player1Y + PlayerHeight) {
 
-          BallSpeed += 0.1F;
+          if (BallSpeed < 10) {
+             BallSpeed += 0.1f;
+          }
           BallSpeedX = BallSpeed;
           BallSpeedY = BallSpeed;
           Player1_Speed = BallSpeed;
